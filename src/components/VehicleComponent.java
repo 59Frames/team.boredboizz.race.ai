@@ -24,6 +24,7 @@ public class VehicleComponent
     private long startTime;
     private long endTime;
     private long survivedTime;
+    private double theoreticalFitness = 0.0;
 
     public VehicleComponent(Chromosome chromosome) {
         this.forwardSpeed = 1;
@@ -44,14 +45,16 @@ public class VehicleComponent
     @Override
     public void onAdded() {
         this.startTime = System.currentTimeMillis();
+        this.theoreticalFitness = 0.0;
     }
 
     @Override
     public void onUpdate(double tpf) {
-        forwardSpeed = tpf * 512;
+        forwardSpeed = tpf * 256;
 
         for (int i = 0; i < DIRECTIONS.length; i++) {
             final int index = i;
+            inputs[index] = 640;
             Point2D pos = calculateEndPoint(DIRECTIONS[i]);
             rayCasts[index].setStartY(entity.getY());
             rayCasts[index].setStartX(entity.getX());
@@ -64,11 +67,13 @@ public class VehicleComponent
                 rayCasts[index].setEndY(p.getY());
                 inputs[index] = distanceBetweenPoints(entity.getPosition(), p);
             });
+
+            this.theoreticalFitness += (inputs[index] / 10);
         }
 
         this.move();
 
-        this.rotate(chromosome.feedForward(inputs)[0]*12);
+        this.rotate(chromosome.feedForward(inputs)[0]*4);
     }
 
     private double distanceBetweenPoints(Point2D position, Point2D p) {
@@ -108,13 +113,7 @@ public class VehicleComponent
     }
 
     private void setChromosomeFitness() {
-        double fitness;
-
-        fitness = hasWon
-                ? ((Double.MAX_VALUE - survivedTime))
-                : survivedTime;
-
-        this.chromosome.fitness(fitness);
+        this.chromosome.fitness(theoreticalFitness);
     }
 
     public void rotate(double angle) {

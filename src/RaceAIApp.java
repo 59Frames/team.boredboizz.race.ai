@@ -34,10 +34,10 @@ public class RaceAIApp
         settings.setVersion("v0.0.1-ALPHA");
 
         _algorithm = GeneticAlgorithm.fromConfiguration(new AlgorithmConfiguration.Builder()
-                .populationSize(200)
-                .numbOfEliteChromosomes(10)
-                .tournamentSelectionSize(100)
-                .mutationRate(0.32)
+                .populationSize(100)
+                .numbOfEliteChromosomes(4)
+                .tournamentSelectionSize(16)
+                .mutationRate(0.12)
                 .build());
         currentGeneration = _algorithm.createGeneration();
     }
@@ -79,17 +79,20 @@ public class RaceAIApp
 
     @Override
     protected void onUpdate(double tpf) {
-        if (!currentGeneration.isAlive()){
-            if (haveWon > 0)
-                System.out.println(haveWon + " have made it to the target.");
+        if (!currentGeneration.isAlive())
+            reset();
+    }
 
-            clearEntities();
-            System.out.println(Stringlify.stringlify("Best Fitness of dead generation: {0}", currentGeneration.population().chromosomes()[0].fitness()));
-            currentGeneration = _algorithm.evolve(currentGeneration);
-            spawnEntities();
-            System.out.println("Generation evolved... current: " + currentGeneration.id());
-            haveWon = 0;
-        }
+    private void reset() {
+        if (haveWon > 0)
+            System.out.println(haveWon + " have made it to the target.");
+
+        clearEntities();
+        System.out.println(Stringlify.stringlify("Best Fitness of dead generation: {0}", currentGeneration.population().chromosomes()[0].fitness()));
+        currentGeneration = _algorithm.evolve(currentGeneration);
+        spawnEntities();
+        System.out.println("Generation evolved... current: " + currentGeneration.id());
+        haveWon = 0;
     }
 
     @Override
@@ -134,5 +137,6 @@ public class RaceAIApp
                 component.move();
             });
         });
+        onKey(KeyCode.K, "kill", this::reset);
     }
 }
