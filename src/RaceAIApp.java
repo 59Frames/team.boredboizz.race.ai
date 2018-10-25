@@ -9,12 +9,10 @@ import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.extra.entity.components.KeepOnScreenComponent;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.settings.GameSettings;
-import components.SpacecraftComponent;
+import components.VehicleComponent;
 import entities.EntityType;
 import javafx.scene.input.KeyCode;
 import stringlify.core.Stringlify;
-
-import java.util.Arrays;
 
 import static com.almasb.fxgl.app.DSLKt.*;
 
@@ -37,9 +35,9 @@ public class RaceAIApp
 
         _algorithm = GeneticAlgorithm.fromConfiguration(new AlgorithmConfiguration.Builder()
                 .populationSize(200)
-                .numbOfEliteChromosomes(8)
-                .tournamentSelectionSize(32)
-                .mutationRate(0.12)
+                .numbOfEliteChromosomes(10)
+                .tournamentSelectionSize(100)
+                .mutationRate(0.32)
                 .build());
         currentGeneration = _algorithm.createGeneration();
     }
@@ -52,7 +50,7 @@ public class RaceAIApp
     }
 
     private void spawnEntities() {
-        getGameWorld().setLevelFromMap("Parkour_3.json");
+        getGameWorld().setLevelFromMap("Parkour_4.json");
         respawnSpacecrafts();
     }
 
@@ -61,11 +59,11 @@ public class RaceAIApp
         for (int i = 0; i < currentGeneration.population().chromosomes().length; i++) {
             Chromosome chromosome = currentGeneration.population().chromosomes()[i];
             Entities.builder()
-                    .type(EntityType.SPACECRAFT)
+                    .type(EntityType.VEHICLE)
                     .at((float)start.getX()+(start.getWidth()/2), (float)start.getY()+(start.getHeight()/2))
-                    .rotate(-180)
+                    .rotate(90)
                     .viewFromNodeWithBBox(texture("spacecraft.png", 32, 32))
-                    .with(new SpacecraftComponent(chromosome))
+                    .with(new VehicleComponent(chromosome))
                     .with(new CollidableComponent(true))
                     .with(new KeepOnScreenComponent(true, true))
                     .buildAndAttach(getGameWorld());
@@ -73,7 +71,7 @@ public class RaceAIApp
     }
 
     private void clearEntities() {
-        getGameWorld().getEntitiesByType(EntityType.SPACECRAFT).forEach(Entity::removeFromWorld);
+        getGameWorld().getEntitiesByType(EntityType.VEHICLE).forEach(Entity::removeFromWorld);
         getGameScene().clearGameViews();
     }
 
@@ -98,18 +96,18 @@ public class RaceAIApp
     protected void initPhysics() {
         getPhysicsWorld().setGravity(0,0);
 
-        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.SPACECRAFT, EntityType.WALL) {
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.WALL) {
             @Override
             protected void onCollisionBegin(Entity spacecraft, Entity wall) {
-                SpacecraftComponent component = spacecraft.getComponent(SpacecraftComponent.class);
+                VehicleComponent component = spacecraft.getComponent(VehicleComponent.class);
                 component.kill();
             }
         });
 
-        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.SPACECRAFT, EntityType.TARGET) {
+        getPhysicsWorld().addCollisionHandler(new CollisionHandler(EntityType.VEHICLE, EntityType.TARGET) {
             @Override
             protected void onCollisionBegin(Entity spacecraft, Entity target) {
-                SpacecraftComponent component = spacecraft.getComponent(SpacecraftComponent.class);
+                VehicleComponent component = spacecraft.getComponent(VehicleComponent.class);
                 component.won();
                 haveWon++;
             }
@@ -119,20 +117,20 @@ public class RaceAIApp
     @Override
     protected void initInput() {
         onKey(KeyCode.A, "left", () -> {
-            getGameWorld().getEntitiesByType(EntityType.SPACECRAFT).forEach(spacecraft -> {
-                SpacecraftComponent component = spacecraft.getComponent(SpacecraftComponent.class);
+            getGameWorld().getEntitiesByType(EntityType.VEHICLE).forEach(spacecraft -> {
+                VehicleComponent component = spacecraft.getComponent(VehicleComponent.class);
                 component.rotate(-1);
             });
         });
         onKey(KeyCode.D, "right", () -> {
-            getGameWorld().getEntitiesByType(EntityType.SPACECRAFT).forEach(spacecraft -> {
-                SpacecraftComponent component = spacecraft.getComponent(SpacecraftComponent.class);
+            getGameWorld().getEntitiesByType(EntityType.VEHICLE).forEach(spacecraft -> {
+                VehicleComponent component = spacecraft.getComponent(VehicleComponent.class);
                 component.rotate(1);
             });
         });
         onKey(KeyCode.W, "up", () -> {
-            getGameWorld().getEntitiesByType(EntityType.SPACECRAFT).forEach(spacecraft -> {
-                SpacecraftComponent component = spacecraft.getComponent(SpacecraftComponent.class);
+            getGameWorld().getEntitiesByType(EntityType.VEHICLE).forEach(spacecraft -> {
+                VehicleComponent component = spacecraft.getComponent(VehicleComponent.class);
                 component.move();
             });
         });

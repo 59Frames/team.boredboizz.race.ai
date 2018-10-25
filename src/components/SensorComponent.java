@@ -22,8 +22,8 @@ class SensorComponent extends Component {
         double x = entity.getX();
         double y = entity.getY();
         double radAngle = Math.toRadians(entity.getRotation()+direction.angleModifier);
-        x += 500 * cos(radAngle);
-        y += 500 * sin(radAngle);
+        x += 640 * cos(radAngle);
+        y += 640 * sin(radAngle);
         return new Point2D(x, y);
     }
 
