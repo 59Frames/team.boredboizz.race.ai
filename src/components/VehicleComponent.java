@@ -50,30 +50,33 @@ public class VehicleComponent
 
     @Override
     public void onUpdate(double tpf) {
-        forwardSpeed = tpf * 256;
 
-        for (int i = 0; i < DIRECTIONS.length; i++) {
-            final int index = i;
-            inputs[index] = 640;
-            Point2D pos = calculateEndPoint(DIRECTIONS[i]);
-            rayCasts[index].setStartY(entity.getY());
-            rayCasts[index].setStartX(entity.getX());
-            rayCasts[index].setEndX(pos.getX());
-            rayCasts[index].setEndY(pos.getY());
+        if (this.chromosome.isAlive && !hasWon){
+            forwardSpeed = tpf * 256;
 
-            RaycastResult result = getPhysicsWorld().raycast(new Point2D(entity.getX(), entity.getY()), new Point2D(pos.getX(), pos.getY()));
-            result.getPoint().ifPresent(p -> {
-                rayCasts[index].setEndX(p.getX());
-                rayCasts[index].setEndY(p.getY());
-                inputs[index] = distanceBetweenPoints(entity.getPosition(), p);
-            });
+            for (int i = 0; i < DIRECTIONS.length; i++) {
+                final int index = i;
+                inputs[index] = 640;
+                Point2D pos = calculateEndPoint(DIRECTIONS[i]);
+                rayCasts[index].setStartY(entity.getY());
+                rayCasts[index].setStartX(entity.getX());
+                rayCasts[index].setEndX(pos.getX());
+                rayCasts[index].setEndY(pos.getY());
 
-            this.theoreticalFitness += (inputs[index] / 10);
+                RaycastResult result = getPhysicsWorld().raycast(new Point2D(entity.getX(), entity.getY()), new Point2D(pos.getX(), pos.getY()));
+                result.getPoint().ifPresent(p -> {
+                    rayCasts[index].setEndX(p.getX());
+                    rayCasts[index].setEndY(p.getY());
+                    inputs[index] = distanceBetweenPoints(entity.getPosition(), p);
+                });
+
+                this.theoreticalFitness += (inputs[index] / 10);
+            }
+
+            this.move();
+
+            this.rotate(chromosome.feedForward(inputs)[0]*4);
         }
-
-        this.move();
-
-        this.rotate(chromosome.feedForward(inputs)[0]*4);
     }
 
     private double distanceBetweenPoints(Point2D position, Point2D p) {
