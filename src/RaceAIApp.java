@@ -34,10 +34,10 @@ public class RaceAIApp
         settings.setVersion("v0.0.1-ALPHA");
 
         _algorithm = GeneticAlgorithm.fromConfiguration(new AlgorithmConfiguration.Builder()
-                .populationSize(100)
-                .numbOfEliteChromosomes(4)
-                .tournamentSelectionSize(16)
-                .mutationRate(0.12)
+                .populationSize(200)
+                .numbOfEliteChromosomes(8)
+                .tournamentSelectionSize(32)
+                .mutationRate(0.24)
                 .build());
         currentGeneration = _algorithm.createGeneration();
     }
@@ -103,7 +103,7 @@ public class RaceAIApp
             @Override
             protected void onCollisionBegin(Entity spacecraft, Entity wall) {
                 VehicleComponent component = spacecraft.getComponent(VehicleComponent.class);
-                component.kill();
+                component.lost();
             }
         });
 
@@ -137,6 +137,6 @@ public class RaceAIApp
                 component.move();
             });
         });
-        onKey(KeyCode.K, "kill", this::reset);
+        onKey(KeyCode.K, "lost", this::reset);
     }
 }

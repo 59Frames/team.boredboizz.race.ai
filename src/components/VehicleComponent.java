@@ -2,13 +2,10 @@ package components;
 
 import ai.model.Chromosome;
 import colr.extensions.schemes.MaterialColors;
-import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.components.PositionComponent;
 import com.almasb.fxgl.entity.view.EntityView;
 import com.almasb.fxgl.physics.RaycastResult;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Line;
-import mathematika.core.Mathematika;
 
 import static java.lang.Math.*;
 import static com.almasb.fxgl.app.FXGL.*;
@@ -16,14 +13,14 @@ import static com.almasb.fxgl.app.FXGL.*;
 public class VehicleComponent
         extends SensorComponent {
 
+    private final int SPEED_MODIFIER = 512;
+    private final int ANGLE_MODIFIER = 4;
+
     private Chromosome chromosome;
     private double forwardSpeed;
     private double[] inputs;
     private boolean hasWon;
     private Line[] rayCasts;
-    private long startTime;
-    private long endTime;
-    private long survivedTime;
     private double theoreticalFitness = 0.0;
 
     public VehicleComponent(Chromosome chromosome) {
@@ -44,15 +41,13 @@ public class VehicleComponent
 
     @Override
     public void onAdded() {
-        this.startTime = System.currentTimeMillis();
         this.theoreticalFitness = 0.0;
     }
 
     @Override
     public void onUpdate(double tpf) {
-
-        if (this.chromosome.isAlive && !hasWon){
-            forwardSpeed = tpf * 256;
+        if (this.isAlive()){
+            forwardSpeed = tpf * SPEED_MODIFIER;
 
             for (int i = 0; i < DIRECTIONS.length; i++) {
                 final int index = i;
@@ -75,44 +70,43 @@ public class VehicleComponent
 
             this.move();
 
-            this.rotate(chromosome.feedForward(inputs)[0]*4);
+            this.rotate(chromosome.feedForward(inputs)[0]*ANGLE_MODIFIER);
         }
+    }
+
+    public void move() {
+        double x = entity.getX();
+        double y = entity.getY();
+        double radAngle = Math.toRadians(entity.getRotation());
+
+        x += forwardSpeed * cos(radAngle);
+        y += forwardSpeed * sin(radAngle);
+
+        entity.setX(x);
+        entity.setY(y);
+    }
+
+    private boolean isAlive() {
+        return (this.chromosome.isAlive && !hasWon);
     }
 
     private double distanceBetweenPoints(Point2D position, Point2D p) {
         return position.distance(p);
     }
 
-    public void move() {
-        if (this.chromosome.isAlive && !hasWon){
-            double x = entity.getX();
-            double y = entity.getY();
-            double radAngle = Math.toRadians(entity.getRotation());
-
-            x += forwardSpeed * cos(radAngle);
-            y += forwardSpeed * sin(radAngle);
-
-            entity.setX(x);
-            entity.setY(y);
-        }
-    }
-
-    private void end(){
-        this.endTime = System.currentTimeMillis();
-        this.survivedTime = endTime - startTime;
-    }
-
-    public void kill(){
+    private void kill(){
         this.chromosome.isAlive = false;
-        end();
         setChromosomeFitness();
+    }
+
+    public void lost(){
+        this.hasWon = false;
+        kill();
     }
 
     public void won(){
         this.hasWon = true;
-        this.chromosome.isAlive = false;
-        end();
-        setChromosomeFitness();
+        kill();
     }
 
     private void setChromosomeFitness() {
