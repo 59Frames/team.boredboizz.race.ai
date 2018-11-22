@@ -34,10 +34,10 @@ public class RaceAIApp
         settings.setVersion("v0.0.1-ALPHA");
 
         _algorithm = GeneticAlgorithm.fromConfiguration(new AlgorithmConfiguration.Builder()
-                .populationSize(200)
-                .numbOfEliteChromosomes(8)
-                .tournamentSelectionSize(32)
-                .mutationRate(0.24)
+                .populationSize(50)
+                .numbOfEliteChromosomes(3)
+                .tournamentSelectionSize(16)
+                .mutationRate(0.08)
                 .build());
         currentGeneration = _algorithm.createGeneration();
     }

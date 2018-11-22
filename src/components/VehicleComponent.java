@@ -13,8 +13,8 @@ import static com.almasb.fxgl.app.FXGL.*;
 public class VehicleComponent
         extends SensorComponent {
 
-    private final int SPEED_MODIFIER = 512;
-    private final int ANGLE_MODIFIER = 4;
+    private final int SPEED_MODIFIER = 128;
+    private final double ANGLE_MODIFIER = 1.5;
 
     private Chromosome chromosome;
     private double forwardSpeed;
@@ -33,7 +33,7 @@ public class VehicleComponent
 
         for (int i = 0; i < rayCasts.length; i++) {
             rayCasts[i] = new Line();
-            rayCasts[i].setStroke(MaterialColors.TRANSPARENT.toJFXColor());
+            rayCasts[i].setStroke(MaterialColors.RED.toJFXColor());
             rayCasts[i].setStrokeWidth(1);
             getGameScene().addGameView(new EntityView(rayCasts[i]));
         }
