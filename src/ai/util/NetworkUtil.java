@@ -1,7 +1,7 @@
 package ai.util;
 
+import _59frames.Ds._59utils.math.Silvester;
 import ai.algorithm.NeuralNetwork;
-import mathematika.core.Mathematika;
 
 import java.io.Serializable;
 
@@ -30,7 +30,7 @@ public class NetworkUtil
     }
 
     public static int randomValue(double lower_bound, double upper_bound){
-        return Mathematika.randomInt(lower_bound, upper_bound);
+        return Silvester.randomInt(lower_bound, upper_bound);
     }
 
 

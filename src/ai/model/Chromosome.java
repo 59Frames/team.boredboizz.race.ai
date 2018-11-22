@@ -2,7 +2,6 @@ package ai.model;
 
 import ai.algorithm.NeuralNetwork;
 import ai.util.NetworkUtil;
-import mathematika.core.Mathematika;
 
 import java.io.Serializable;
 import java.util.Arrays;

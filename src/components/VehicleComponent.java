@@ -4,6 +4,7 @@ import ai.model.Chromosome;
 import colr.extensions.schemes.MaterialColors;
 import com.almasb.fxgl.entity.view.EntityView;
 import com.almasb.fxgl.physics.RaycastResult;
+import dao.NetworkWriter;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Line;
 
@@ -33,7 +34,7 @@ public class VehicleComponent
 
         for (int i = 0; i < rayCasts.length; i++) {
             rayCasts[i] = new Line();
-            rayCasts[i].setStroke(MaterialColors.RED.toJFXColor());
+            rayCasts[i].setStroke(MaterialColors.TRANSPARENT.toJFXColor());
             rayCasts[i].setStrokeWidth(1);
             getGameScene().addGameView(new EntityView(rayCasts[i]));
         }
@@ -106,6 +107,7 @@ public class VehicleComponent
 
     public void won(){
         this.hasWon = true;
+        NetworkWriter.write(chromosome.getNetwork());
         kill();
     }
 

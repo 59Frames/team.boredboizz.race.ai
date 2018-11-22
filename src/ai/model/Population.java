@@ -1,6 +1,6 @@
 package ai.model;
 
-import mathematika.core.Mathematika;
+import _59frames.Ds._59utils.math.Silvester;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -51,6 +51,6 @@ public class Population
         for (int i = 0; i < chromosomes.length; i++) {
             arr[i] = chromosomes[i].fitness();
         }
-        return Mathematika.average(arr);
+        return Silvester.average(arr);
     }
 }

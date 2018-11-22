@@ -3,8 +3,8 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/.dependencies/colr_jv_8.jar!/" />
       <root url="jar://$PROJECT_DIR$/.dependencies/fxgl-0.5.4-uber.jar!/" />
-      <root url="jar://$PROJECT_DIR$/.dependencies/mathematika.jar!/" />
-      <root url="jar://$PROJECT_DIR$/.dependencies/stringlify.jar!/" />
+      <root url="jar://$PROJECT_DIR$/.dependencies/json-simple-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/.dependencies/59Frames.Ds.59Utils.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

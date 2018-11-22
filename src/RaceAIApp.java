@@ -12,8 +12,8 @@ import com.almasb.fxgl.settings.GameSettings;
 import components.VehicleComponent;
 import entities.EntityType;
 import javafx.scene.input.KeyCode;
-import stringlify.core.Stringlify;
 
+import static _59frames.Ds._59utils.Stringlify.stringlify;
 import static com.almasb.fxgl.app.DSLKt.*;
 
 public class RaceAIApp
@@ -37,7 +37,7 @@ public class RaceAIApp
                 .populationSize(50)
                 .numbOfEliteChromosomes(3)
                 .tournamentSelectionSize(16)
-                .mutationRate(0.08)
+                .mutationRate(0.16)
                 .build());
         currentGeneration = _algorithm.createGeneration();
     }
@@ -88,7 +88,7 @@ public class RaceAIApp
             System.out.println(haveWon + " have made it to the target.");
 
         clearEntities();
-        System.out.println(Stringlify.stringlify("Best Fitness of dead generation: {0}", currentGeneration.population().chromosomes()[0].fitness()));
+        System.out.println(stringlify("Best Fitness of dead generation: {0}", currentGeneration.population().chromosomes()[0].fitness()));
         currentGeneration = _algorithm.evolve(currentGeneration);
         spawnEntities();
         System.out.println("Generation evolved... current: " + currentGeneration.id());
@@ -119,24 +119,6 @@ public class RaceAIApp
 
     @Override
     protected void initInput() {
-        onKey(KeyCode.A, "left", () -> {
-            getGameWorld().getEntitiesByType(EntityType.VEHICLE).forEach(spacecraft -> {
-                VehicleComponent component = spacecraft.getComponent(VehicleComponent.class);
-                component.rotate(-1);
-            });
-        });
-        onKey(KeyCode.D, "right", () -> {
-            getGameWorld().getEntitiesByType(EntityType.VEHICLE).forEach(spacecraft -> {
-                VehicleComponent component = spacecraft.getComponent(VehicleComponent.class);
-                component.rotate(1);
-            });
-        });
-        onKey(KeyCode.W, "up", () -> {
-            getGameWorld().getEntitiesByType(EntityType.VEHICLE).forEach(spacecraft -> {
-                VehicleComponent component = spacecraft.getComponent(VehicleComponent.class);
-                component.move();
-            });
-        });
-        onKey(KeyCode.K, "lost", this::reset);
+        onKey(KeyCode.R, "lost", this::reset);
     }
 }

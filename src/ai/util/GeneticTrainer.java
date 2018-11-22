@@ -3,13 +3,13 @@ package ai.util;
 import ai.model.Chromosome;
 import ai.model.Generation;
 import ai.algorithm.GeneticAlgorithm;
-import stringlify.core.Stringlify;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static _59frames.Ds._59utils.Stringlify.stringlify;
 
 public class GeneticTrainer
         implements Serializable, Cloneable {
@@ -56,11 +56,11 @@ public class GeneticTrainer
             }
 
 
-            System.out.println(Stringlify.stringlify("Generation {0} survived {1} rounds. Average fitness: {2}", generation.id(), survivedRounds, avFi));
+            System.out.println(stringlify("Generation {0} survived {1} rounds. Average fitness: {2}", generation.id(), survivedRounds, avFi));
             survivedRounds = 0;
         }
-        LOGGER.info(Stringlify.stringlify("Latest generation: {0}", generation));
-        LOGGER.info(Stringlify.stringlify("Best generation: {0}. Average Fitness: {1}", bestGenId, bestAvFi));
+        LOGGER.info(stringlify("Latest generation: {0}", generation));
+        LOGGER.info(stringlify("Best generation: {0}. Average Fitness: {1}", bestGenId, bestAvFi));
 
         Map<String, Object> map = new HashMap<>();
         map.put("generations", generations);
