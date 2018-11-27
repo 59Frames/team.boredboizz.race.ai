@@ -5,7 +5,7 @@ import ai.model.Generation;
 import ai.model.Population;
 import java.io.Serializable;
 
-import static ai.util.NetworkUtil.randomValue;
+import static _59frames.Ds._59utils.math.Silvester.noiseInt;
 
 public class GeneticAlgorithm
         implements Serializable, Cloneable {
@@ -47,10 +47,7 @@ public class GeneticAlgorithm
     }
 
     private Population crossoverPopulation(Population population){
-        Population crossoverPopulation = new Population(POPULATION_SIZE, NETWORK.NETWORK_LAYER_SIZES);
-        for (int i = 0; i < NUMB_OF_ELITE_CHROMOSOMES; i++) {
-            crossoverPopulation.chromosomes()[i] = population.chromosomes()[i];
-        }
+        Population crossoverPopulation = createPopulationWithEliteChromosomes(population);
         for (int i = NUMB_OF_ELITE_CHROMOSOMES; i < population.chromosomes().length; i++) {
             Chromosome chromosome1 = selectTournamentPopulation(population).chromosomes()[0];
             Chromosome chromosome2 = selectTournamentPopulation(population).chromosomes()[0];
@@ -60,11 +57,16 @@ public class GeneticAlgorithm
         return crossoverPopulation;
     }
 
-    private Population mutatePopulation(Population population){
-        Population mutatePopulation = new Population(POPULATION_SIZE, NETWORK.NETWORK_LAYER_SIZES);
+    private Population createPopulationWithEliteChromosomes(Population population) {
+        Population crossoverPopulation = new Population(POPULATION_SIZE, NETWORK.NETWORK_LAYER_SIZES);
         for (int i = 0; i < NUMB_OF_ELITE_CHROMOSOMES; i++) {
-            mutatePopulation.chromosomes()[i] = population.chromosomes()[i];
+            crossoverPopulation.chromosomes()[i] = population.chromosomes()[i];
         }
+        return crossoverPopulation;
+    }
+
+    private Population mutatePopulation(Population population){
+        Population mutatePopulation = createPopulationWithEliteChromosomes(population);
 
         for (int i = NUMB_OF_ELITE_CHROMOSOMES; i < population.chromosomes().length; i++) {
             mutatePopulation.chromosomes()[i] = mutateChromosome(population.chromosomes()[i]);
@@ -90,7 +92,7 @@ public class GeneticAlgorithm
 
         for (int i = 0; i < chromosome.genes().length; i++) {
             if (Math.random() < MUTATION_RATE){
-                mutateChromosome.genes()[i] = randomValue(Chromosome.MIN, Chromosome.MAX);
+                mutateChromosome.genes()[i] = noiseInt(chromosome.genes()[i]);
             } else mutateChromosome.genes()[i] = chromosome.genes()[i];
         }
 

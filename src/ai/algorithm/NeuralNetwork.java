@@ -79,7 +79,7 @@ public class NeuralNetwork
     }
 
     @SuppressWarnings("all")
-    public String toJSON() {
+    public JSONObject toJSON() {
         JSONObject root = new JSONObject();
 
         JSONObject config = new JSONObject();
@@ -104,7 +104,7 @@ public class NeuralNetwork
         root.put("layerSizes", layerSizes);
         root.put("chromosomeGenes", genes);
 
-        return root.toJSONString();
+        return root;
     }
 
 }

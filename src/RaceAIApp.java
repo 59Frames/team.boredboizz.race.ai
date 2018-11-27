@@ -10,6 +10,7 @@ import com.almasb.fxgl.extra.entity.components.KeepOnScreenComponent;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.settings.GameSettings;
 import components.VehicleComponent;
+import dao.NetworkWriter;
 import entities.EntityType;
 import javafx.scene.input.KeyCode;
 
@@ -34,10 +35,10 @@ public class RaceAIApp
         settings.setVersion("v0.0.1-ALPHA");
 
         _algorithm = GeneticAlgorithm.fromConfiguration(new AlgorithmConfiguration.Builder()
-                .populationSize(50)
-                .numbOfEliteChromosomes(3)
-                .tournamentSelectionSize(16)
-                .mutationRate(0.16)
+                .populationSize(200)
+                .numbOfEliteChromosomes(10)
+                .tournamentSelectionSize(32)
+                .mutationRate(0.12)
                 .build());
         currentGeneration = _algorithm.createGeneration();
     }
@@ -84,8 +85,10 @@ public class RaceAIApp
     }
 
     private void reset() {
-        if (haveWon > 0)
+        if (haveWon > 0) {
             System.out.println(haveWon + " have made it to the target.");
+            NetworkWriter.write(String.valueOf(currentGeneration.id()));
+        }
 
         clearEntities();
         System.out.println(stringlify("Best Fitness of dead generation: {0}", currentGeneration.population().chromosomes()[0].fitness()));
