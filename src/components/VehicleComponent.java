@@ -14,8 +14,8 @@ import static com.almasb.fxgl.app.FXGL.*;
 public class VehicleComponent
         extends SensorComponent {
 
-    private final int SPEED_MODIFIER = 512;
-    private final double ANGLE_MODIFIER = 4;
+    private final int SPEED_MODIFIER = 128;
+    private final double ANGLE_MODIFIER = 2;
 
     private Chromosome chromosome;
     private double forwardSpeed;
@@ -107,7 +107,7 @@ public class VehicleComponent
 
     public void won(){
         this.hasWon = true;
-        NetworkWriter.add(this.chromosome.getNetwork());
+        NetworkWriter.write(this.chromosome.getNetwork());
         kill();
     }
 

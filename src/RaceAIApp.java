@@ -20,11 +20,25 @@ import static com.almasb.fxgl.app.DSLKt.*;
 public class RaceAIApp
         extends GameApplication {
 
-    private GeneticAlgorithm _algorithm;
-    private Generation currentGeneration;
+    private static GeneticAlgorithm _algorithm;
+    private static Generation currentGeneration;
 
     public static void main(String[] args) {
+        setup();
         launch(args);
+    }
+
+    private static void setup() {
+        _algorithm = GeneticAlgorithm.fromConfiguration(new AlgorithmConfiguration.Builder()
+                .populationSize(50)
+                .numbOfEliteChromosomes(10)
+                .tournamentSelectionSize(10)
+                .mutationRate(0.12)
+                .network(GameSetup.getNeuralNetwork())
+                .isBasedOnNetwork(false)
+                .build());
+
+        currentGeneration = _algorithm.createGeneration();
     }
 
     @Override
@@ -33,14 +47,6 @@ public class RaceAIApp
         settings.setHeight(50*32);
         settings.setTitle("Race AI");
         settings.setVersion("v0.0.1-ALPHA");
-
-        _algorithm = GeneticAlgorithm.fromConfiguration(new AlgorithmConfiguration.Builder()
-                .populationSize(200)
-                .numbOfEliteChromosomes(10)
-                .tournamentSelectionSize(32)
-                .mutationRate(0.12)
-                .build());
-        currentGeneration = _algorithm.createGeneration();
     }
 
     @Override
@@ -87,7 +93,6 @@ public class RaceAIApp
     private void reset() {
         if (haveWon > 0) {
             System.out.println(haveWon + " have made it to the target.");
-            NetworkWriter.write(String.valueOf(currentGeneration.id()));
         }
 
         clearEntities();

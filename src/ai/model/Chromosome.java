@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class Chromosome
         implements Serializable, Cloneable {
-    public static final int MAX = 9, MIN = -9;
+    public static final int MAX = 10, MIN = -10;
     public boolean isAlive;
     private boolean shouldChangeFitness = true;
     private double fitness = 0;
@@ -56,6 +56,10 @@ public class Chromosome
 
     public NeuralNetwork getNetwork(){
         return this.network;
+    }
+
+    public void setNetwork(NeuralNetwork network) {
+        this.network = network;
     }
 
     @Override

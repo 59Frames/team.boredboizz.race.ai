@@ -7,24 +7,24 @@ import java.io.Serializable;
 
 public class NetworkUtil
         implements Serializable, Cloneable {
-    public static int[] createArrayWithZero(int size) {
+    public static int[] createArrayWithRandomValues(int size) {
         if(size < 1){
             return null;
         }
         int[] arr = new int[size];
         for(int i = 0; i < size; i++){
-            arr[i] = 0;
+            arr[i] = randomValue(-10, 10);
         }
         return arr;
     }
 
-    public static int[][] createArrayWithZero(int sizeX, int sizeY){
+    public static int[][] createArrayWithRandomValues(int sizeX, int sizeY){
         if(sizeX < 1 || sizeY < 1){
             return null;
         }
         int[][] arr = new int[sizeX][sizeY];
         for(int i = 0; i < sizeX; i++){
-            arr[i] = createArrayWithZero(sizeY);
+            arr[i] = createArrayWithRandomValues(sizeY);
         }
         return arr;
     }

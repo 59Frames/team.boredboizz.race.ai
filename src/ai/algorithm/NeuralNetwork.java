@@ -35,10 +35,10 @@ public class NeuralNetwork
         for (int i = 0; i < NETWORK_SIZE; i++) {
             this.output[i] = new double[this.NETWORK_LAYER_SIZES[i]];
 
-            this.bias[i] = createArrayWithZero(this.NETWORK_LAYER_SIZES[i]);
+            this.bias[i] = createArrayWithRandomValues(this.NETWORK_LAYER_SIZES[i]);
 
             if (i > 0)
-                weights[i] = createArrayWithZero(this.NETWORK_LAYER_SIZES[i], this.NETWORK_LAYER_SIZES[i - 1]);
+                weights[i] = createArrayWithRandomValues(this.NETWORK_LAYER_SIZES[i], this.NETWORK_LAYER_SIZES[i - 1]);
         }
     }
 
@@ -76,6 +76,28 @@ public class NeuralNetwork
         }
 
         return output[NETWORK_SIZE - 1];
+    }
+
+    public static NeuralNetwork fromJSON(JSONObject object) {
+        JSONObject network = (JSONObject) object.get("network");
+
+        JSONArray layerSizesArray = (JSONArray) network.get("layerSizes");
+        JSONArray genesArray = (JSONArray) network.get("chromosomeGenes");
+
+        int[] layerSizes = extractIntArray(layerSizesArray);
+        int[] genes = extractIntArray(genesArray);
+
+        return new NeuralNetwork(layerSizes).withWeightsAndBias(genes);
+    }
+
+    private static int[] extractIntArray(JSONArray array) {
+        int[] arr = new int[array.size()];
+
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = Integer.valueOf(String.valueOf(array.get(i)));
+        }
+
+        return arr;
     }
 
     @SuppressWarnings("all")

@@ -1,6 +1,7 @@
 package ai.model;
 
 import _59frames.Ds._59utils.math.Silvester;
+import ai.algorithm.NeuralNetwork;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -18,6 +19,14 @@ public class Population
     public Population initializePopulation(int chromosomeGeneLength) {
         for (int i = 0; i < chromosomes.length; i++) {
             chromosomes[i] = new Chromosome(chromosomeGeneLength, networkLayerSizes).initializeChromosome();
+        }
+        sortChromosomesByFitness();
+        return this;
+    }
+
+    public Population withNetwork(NeuralNetwork network) {
+        for (Chromosome chromosome : chromosomes) {
+            chromosome.setNetwork(network);
         }
         sortChromosomesByFitness();
         return this;
