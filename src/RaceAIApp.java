@@ -30,9 +30,9 @@ public class RaceAIApp
 
     private static void setup() {
         _algorithm = GeneticAlgorithm.fromConfiguration(new AlgorithmConfiguration.Builder()
-                .populationSize(50)
+                .populationSize(300)
                 .numbOfEliteChromosomes(10)
-                .tournamentSelectionSize(10)
+                .tournamentSelectionSize(50)
                 .mutationRate(0.12)
                 .network(GameSetup.getNeuralNetwork())
                 .isBasedOnNetwork(false)
@@ -96,6 +96,7 @@ public class RaceAIApp
         }
 
         clearEntities();
+        currentGeneration.population().sortChromosomesByFitness();
         System.out.println(stringlify("Best Fitness of dead generation: {0}", currentGeneration.population().chromosomes()[0].fitness()));
         currentGeneration = _algorithm.evolve(currentGeneration);
         spawnEntities();
@@ -127,6 +128,6 @@ public class RaceAIApp
 
     @Override
     protected void initInput() {
-        onKey(KeyCode.R, "lost", this::reset);
+        onKey(KeyCode.R, "reset", this::reset);
     }
 }
