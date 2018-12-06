@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="team.boredboizz.race.ai:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/team_boredboizz_race_ai_jar</output-path>
+    <root id="archive" name="team.boredboizz.race.ai.jar">
+      <element id="module-output" name="team.boredboizz.race.ai" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src/assets" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/.dependencies/colr_jv_8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/.dependencies/fxgl-0.5.4-uber.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/.dependencies/json-simple-1.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/.dependencies/59Frames.Ds.59Utils.jar" path-in-jar="/" />
+      <element id="dir-copy" path="$PROJECT_DIR$/res" />
+    </root>
+  </artifact>
+</component>

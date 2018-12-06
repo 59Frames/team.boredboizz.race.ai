@@ -1,3 +1,4 @@
+import ai.algorithm.NeuralNetwork;
 import ai.model.Chromosome;
 import ai.model.Generation;
 import ai.algorithm.AlgorithmConfiguration;
@@ -30,11 +31,11 @@ public class RaceAIApp
 
     private static void setup() {
         _algorithm = GeneticAlgorithm.fromConfiguration(new AlgorithmConfiguration.Builder()
-                .populationSize(300)
-                .numbOfEliteChromosomes(10)
-                .tournamentSelectionSize(50)
+                .populationSize(50)
+                .numbOfEliteChromosomes(3)
+                .tournamentSelectionSize(10)
                 .mutationRate(0.12)
-                .network(GameSetup.getNeuralNetwork())
+                .network(new NeuralNetwork(5, 4, 3, 2, 1))
                 .isBasedOnNetwork(false)
                 .build());
 

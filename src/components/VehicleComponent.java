@@ -7,6 +7,8 @@ import com.almasb.fxgl.physics.RaycastResult;
 import dao.NetworkWriter;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Line;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import static java.lang.Math.*;
 import static com.almasb.fxgl.app.FXGL.*;
@@ -14,8 +16,8 @@ import static com.almasb.fxgl.app.FXGL.*;
 public class VehicleComponent
         extends SensorComponent {
 
-    private final int SPEED_MODIFIER = 512;
-    private final double ANGLE_MODIFIER = 4;
+    private final int SPEED_MODIFIER = 64;
+    private final double ANGLE_MODIFIER = 1;
 
     private Chromosome chromosome;
     private double forwardSpeed;
@@ -23,6 +25,9 @@ public class VehicleComponent
     private boolean hasWon;
     private Line[] rayCasts;
     private double theoreticalFitness = 0.0;
+    private double startTime;
+    private double endTime;
+    private double survivedTime;
 
     public VehicleComponent(Chromosome chromosome) {
         this.forwardSpeed = 1;
@@ -43,11 +48,12 @@ public class VehicleComponent
     @Override
     public void onAdded() {
         this.theoreticalFitness = 0.0;
+        this.startTime = System.currentTimeMillis();
     }
 
     @Override
     public void onUpdate(double tpf) {
-        if (this.isAlive()){
+        if (this.isAlive()) {
             forwardSpeed = tpf * SPEED_MODIFIER;
 
             for (int i = 0; i < DIRECTIONS.length; i++) {
@@ -71,7 +77,7 @@ public class VehicleComponent
 
             this.move();
 
-            this.rotate(chromosome.feedForward(inputs)[0]*ANGLE_MODIFIER);
+            this.rotate(chromosome.feedForward(inputs)[0] * ANGLE_MODIFIER);
         }
     }
 
@@ -87,27 +93,34 @@ public class VehicleComponent
         entity.setY(y);
     }
 
+    @Contract(pure = true)
     private boolean isAlive() {
         return (this.chromosome.isAlive && !hasWon);
     }
 
-    private double distanceBetweenPoints(Point2D position, Point2D p) {
+    private double distanceBetweenPoints(@NotNull Point2D position, Point2D p) {
         return position.distance(p);
     }
 
-    private void kill(){
+    private void kill() {
         this.chromosome.isAlive = false;
+        this.endTime = System.currentTimeMillis();
+        this.survivedTime = (this.endTime - this.startTime) / 100;
+
+        if (this.hasWon)
+            this.theoreticalFitness -= this.survivedTime;
+
         setChromosomeFitness();
     }
 
-    public void lost(){
+    public void lost() {
         this.hasWon = false;
         kill();
     }
 
-    public void won(){
+    public void won() {
         this.hasWon = true;
-        NetworkWriter.write(this.chromosome.getNetwork());
+        //NetworkWriter.write(this.chromosome.getNetwork());
         kill();
     }
 
